@@ -17,8 +17,8 @@ The primary objective of this CTF is to understand the risks of **Indirect Promp
 ### Step 1: Enumerating the Application Behavior
 Initially, direct attempts to ask for the flag file or using overly complex obfuscation rules (such as spelling out symbols textually like "slash root slash flag dot txt") resulted in broken commands or missing directory errors.
 
-![Initial Attempts and Errors](./Screenshots/Shot1.png)
 ![More Attempts and Errors](./Screenshots/Shot3.png)
+![Initial Attempts and Errors](./Screenshots/Shot1.png)
 ![We can find the /root directory](./Screenshots/Shot2.png)
 
 ### Step 2: The Breakthrough Strategy
