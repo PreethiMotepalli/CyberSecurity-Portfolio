@@ -23,7 +23,9 @@ The assessment behan by mapping the target web application infrastructure using 
 gobuster dir -u http://<machine_IP> -w /usr/share/wordlists/dirb/common.txt
 ```
 [!Scanning for directories](./Screenshots/shot1.png)
+
 The scan revealed a standard login page (`index.php`) and a highly interesting `/mail/` directory. Navigating to the exposed mail log file revealed internal system communication:
+
 [!mail log](./Screenshots/shot2.png)
 
 Inside the logs, an operational note confirmed that the human resources username is `hr`. Crucially, the text explicitly stated that the HR password was temporarily hardcoded directly inside the application's configuration file (`config.php`) for convenience during the initial rollout.
@@ -49,6 +51,7 @@ http://<machine_IP>/file.php?cv=file:/config.php
 ```
 
 By viewing the raw HTML source of the returned page (`Ctrl + U`), the hardcoded PHP database configuration array became visible, exposing the cleartext password for the `hr` account. 
+
 [!config.php](./Screenshots/shot4.png)
 
 Logging into `index.php` with these credentials successfully opened the HR dashboard and granted the **User Flag**.
@@ -57,12 +60,14 @@ Logging into `index.php` with these credentials successfully opened the HR dashb
 
 ### Phase 3: Authenticated SQL Injection (SQLi)
 The HR dashboard included a search utility to look up applicant entries. Testing the query parameter by searching for the letter `a` generated a dynamic URL tracking payload:
+
 [!search bar](./Screenshots/shot5.png)
 
 ```text
 http://<machine_ip>/dashboard.php?search=a
 ```
 [!dashboard.php](./Screenshots/shot6.png)
+
 Because search parameters often query databases unsafely, this input field was targeted for verification. Since the endpoint requires a valid login, the current session cookie (`PHPSESSID`) was extracted from browser storage and supplied directly to **SQLmap** to bypass the login portal block.
 
 #### 1. Database Enumeration
